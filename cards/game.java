@@ -1,7 +1,7 @@
 package cards;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+
 
 public class game {
     card playedCard;
@@ -46,7 +46,6 @@ public class game {
         if (set.size() == 2) {
             return true;
         }
-
         return false;
     }
 

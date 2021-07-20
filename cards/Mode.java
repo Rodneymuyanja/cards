@@ -58,25 +58,17 @@ public class Mode implements rules {
         int [] numbers  = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15};
         String [] kind  = {"spades", "clubs", "hearts", "diamonds"};
 
-       // card [] purgeModeDeck = new card [54];
-
         ArrayList<card> NormalDeck = new ArrayList<card>();
 
         for (int i = 0; i < numbers.length; i++) {
             for (int j = 0; j < kind.length; j++) {
                 card = new card(numbers[i], kind[j]);
+                NormalDeck.add(card); 
                 
-                /*if ((card.getNumber() != 14) && (card.getNumber() != 16)){
-                    NormalDeck.add(card); 
-                }*/
-                   // card.showCardDetails();
-                   NormalDeck.add(card); 
-                   // break;//adding a joker once..
-                
-               System.out.println("............");
+                System.out.println("............");
                 card.showCardDetails();
                 System.out.println("............");
-                //purgeModeDeck.add(card); 
+               
             }
         }
         System.out.println("......purge mode deck......");
