@@ -1,13 +1,16 @@
 package cards;
 
 import java.util.ArrayList;
-
+import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Mode implements rules {
 
     public int min = 0;
-    public int max = 55;
+    public int max = 51;
+
+    ArrayList<card> playerOne = new ArrayList<card>();
+    ArrayList<card> playerTwo = new ArrayList<card>();
 
     game game = new game();
 
@@ -17,13 +20,18 @@ public class Mode implements rules {
         return this.mode;
     }
 
+   /* public Mode(){
+        start();
+    }*/
+
     @Override
     public boolean repeat(boolean turn) {
         return turn = true;  
     }
 
     @Override
-    public void pick() {    
+    public void pick() {   
+         
     }
 
     @Override
@@ -64,103 +72,47 @@ public class Mode implements rules {
             for (int j = 0; j < kind.length; j++) {
                 card = new card(numbers[i], kind[j]);
                 NormalDeck.add(card); 
-                
-                System.out.println("............");
-                card.showCardDetails();
-                System.out.println("............");
                
             }
         }
-        System.out.println("......purge mode deck......");
-        for (int k = 0; k < NormalDeck.size(); k++) {
-            System.out.println(NormalDeck.get(k).getName());
-        }
-        System.out.println("......purge mode deck size......"+NormalDeck.size());
-
         return NormalDeck;
     }
     
     public static void main(String[] args) {
         Mode p = new Mode();
 
-        p.deck();
-        ArrayList<card> one = null;
-        ArrayList<card> two  = null;
-
-       /* one = p.servePlayerOne(cards, 8);
-        two = p.servePlayerTwo(cards, 8);
-
-        System.out.println(" repeats:  "+p.checkForRepeats(one, two));
-        System.out.println(" repeats within one:  "+p.checkForRepeatsWithIn(one)); 
-
-        System.out.println(" repeats within two:  "+p.checkForRepeatsWithIn(two)); 
-
-        System.out.println("......playerone .....");
-        for (int k = 0; k < one.size(); k++) {
-            System.out.println(one.get(k).getName());
-        }
-        System.out.println("......purge mode deck size......"+one.size());
-
-        System.out.println("......playertwo .....");
-        for (int k = 0; k < two.size(); k++) {
-            System.out.println(two.get(k).getName());
-        }
-        System.out.println("......purge mode deck size......"+two.size());*/
+        ArrayList<card> deck = p.deck();
+        ArrayList<card> one = new ArrayList<card>();
+        ArrayList<card> two = new ArrayList<card>();
+        Collections.shuffle(deck);
+        p.serve(deck, one, two, 8);
+      
 
     }
 
-    @Override
-    public ArrayList<card> servePlayerOne(ArrayList<card> cards, int plays) {
+    public void setPlayerOne(ArrayList<card> c){
+        this.playerOne = c;
+    }
 
-        ArrayList<card> set = new ArrayList<card>();
+    public void setPlayerTwo(ArrayList<card> c){
+        this.playerTwo = c;
+    }
 
-        for (int i = 0; i < plays; i++) {
-            int h = ThreadLocalRandom.current().nextInt(min, max);
-            
-            card c = cards.get(h);
-            set.add(c);
-        }
+    public ArrayList<card> getplayerOne(){
+        return this.playerOne;
+    }
 
-        return set;
+    public ArrayList<card> getplayerTwo(){
+        return this.playerTwo;
     }
 
     @Override
-    public ArrayList<card> servePlayerTwo(ArrayList<card> cards, int plays) {
-        ArrayList<card> set = new ArrayList<card>();
-
-        for (int i = 0; i < plays; i++) {
-            int h = ThreadLocalRandom.current().nextInt(min, max);
-            
-            card c = cards.get(h);
-            set.add(c);
-        }
-
-        return set;
-    }
-
-    @Override
-    public boolean checkForRepeats(ArrayList<card> playerOneSet, ArrayList<card> playerTwoSet) { 
-        for (int i = 0; i<playerOneSet.size(); i++) {
-            if (playerOneSet.get(i).getNumber() == playerTwoSet.get(i).getNumber()) {
-               
-                System.out.println(" repeats:  "+playerOneSet.get(i).getName()); 
-                return true;    
-            }
-        }   
-        return false;
+    public boolean checkForRepeats() { 
+       return false;
     }
 
     @Override
     public boolean checkForRepeatsWithIn(ArrayList<card> set) {
-        for (int i = 0; i<set.size(); i++) {
-            for (int j = i+1; j <set.size(); j++) {
-                if (i!=j && set.get(i).getName() == set.get(j).getName()) {
-                    System.out.println(" repeats within one i:  "+set.get(i).getName()); 
-                    System.out.println(" repeats within one j:  "+set.get(j).getName()); 
-                    return true;
-                }
-            }
-        }
         return false;
     }
 
@@ -179,6 +131,64 @@ public class Mode implements rules {
         }
 
         return set;
+    }
+    
+    public card makeAplay(ArrayList<card> space, player player, card choice, int plays) {
+        card c = null;
+
+        for(int i = 0; i < player.cards.size(); i++){
+            if ((player.cards.get(i).getKind() == choice.getKind()) && 
+                    (player.cards.get(i).getNumber() == choice.getNumber())) {
+                c = player.cards.get(i);
+                player.cards.remove(i);
+                space.add(player.cards.get(i));
+            }
+        }
+
+        return c;
+    }
+
+    public void serve(ArrayList<card> deck, ArrayList<card> one, ArrayList<card> two, int plays){
+        int servables = plays*2;
+        for (int i = 0; i < servables; i++) {
+            if (i%2 == 0) {
+                deck.remove(i);
+                one.add(deck.get(i));
+            }else{
+                deck.remove(i);
+                two.add(deck.get(i));
+            }
+        }
+
+        setPlayerOne(one);
+        setPlayerTwo(two);
+
+
+        for (int i = 0; i < plays; i++) {
+            System.out.println("Mode.serve()one......"+one.get(i).getName());
+
+        }
+        System.out.println("..................................");
+        for (int i = 0; i < plays; i++) {
+            System.out.println("Mode.serve()two....."+two.get(i).getName());
+        }
+        System.out.println("..................................");
+        for (int i = 0; i < deck.size(); i++) {
+            System.out.println("deck....."+deck.get(i).getName());
+            
+        }
+        System.out.println("decksize"+deck.size());
+    }
+
+    
+    public boolean hasCard(ArrayList<card> cards, card card) {
+        for (int i = 0; i < cards.size(); i++ ) {
+            if ((cards.get(i).getNumber() == card.getNumber()) 
+                    && (cards.get(i).getKind() == card.getKind())) {
+                        return true;
+            }
+        }
+        return false;
     }
     
 }

@@ -8,7 +8,29 @@ public class game {
     boolean turn = true;
     String currentColor = "";
     ArrayList<card> deck = new ArrayList<card>();
+    String mode = "";
+    ArrayList<card> spaceCards = new ArrayList<card>();
     
+
+    public game(String Mode) {
+        if (Mode == "normal") {
+           Mode m = new Mode();
+           this.mode = m.getMode();
+        }else {
+            if (Mode == "purge") {
+               purgeMode p = new purgeMode();
+               p.getMode();
+            }
+        }
+    }
+
+    public game(){
+
+    }
+
+    public void setCurrentCard(card card) {
+        this.playedCard = card;
+    }
 
     public card currentCard(){
         return this.playedCard;
@@ -83,6 +105,14 @@ public class game {
 
     void setDeck(ArrayList<card> dec){
         this.deck = dec;
+    }
+
+    public void setSpace(card card) {
+        this.spaceCards.add(card);
+    }
+
+    public ArrayList<card> getSpace(){
+        return this.spaceCards;
     }
 
     
